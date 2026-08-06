@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest   # v89: macOS quota tukendi, Linux runner limitsiz + hizli
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
@@ -41,7 +41,6 @@ jobs:
 
       - name: Prepare Build Files
         run: |
-          # Tweak.xm kokte degil template/ icindeyse koke kopyala
           if [ ! -f Tweak.xm ] && [ -f template/Tweak.xm ]; then
             cp template/Tweak.xm ./Tweak.xm
           fi
@@ -53,7 +52,7 @@ jobs:
           Depends: mobilesubstrate, firmware (>= 14.0)
           Version: 89.0
           Architecture: iphoneos-arm64
-          Description: FEW1N Mod Menu v89.0 - Gelismis Ozel Oda (31 Kisi, Ozel Harita Etiketi, Canli Harita & Isim Degistirme, TMPro Short Hex Renkler, Polis Cakar/Siren, Pop&Bangs, Kesici Ses Modu, Otomatik Korna, Canli Reklam Bozucu)
+          Description: FEW1N Mod Menu v89.0
           Maintainer: few1n
           Author: few1n
           Section: Tweaks
@@ -103,16 +102,27 @@ jobs:
           cp "$DYLIB" output/FEW1NMod.dylib
           ls -la output/
 
-      - name: Upload .deb (jailbreak)
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: FEW1N-ModMenu-v89.0-deb-${{ github.run_number }}
-          path: output/*.deb
+          path: output/*
 
-      - name: Upload .dylib (sideload)
-        uses: actions/upload-artifact@v4
+      - name: Create GitHub Release & Upload DEB/DYLIB
+        uses: softprops/action-gh-release@v2
         with:
-          name: FEW1N-ModMenu-v89.0-dylib-${{ github.run_number }}
-          path: output/FEW1NMod.dylib
-      # v88: Sileo repo tamamen kaldirildi. Deb ve dylib artifact olarak Actions'ta duruyor.
-      # Kurulum: Actions -> Build run -> Artifacts -> FEW1N-ModMenu-vXX.X-deb-YYY indir -> Filza ile kur.
+          files: |
+            output/*.deb
+            output/*.dylib
+          tag_name: v89.0-build${{ github.run_number }}
+          name: FEW1N Mod Menu v89.0 (Build #${{ github.run_number }})
+          body: |
+            🚀 **FEW1N Mod Menu Otomatik Derleme**
+            
+            - **Sürüm:** v89.0
+            - **Build:** #${{ github.run_number }}
+            - **Commit:** ${{ github.sha }}
+            
+            İndirip kurmak için aşağıdaki `.deb` (Filza / Jailbreak) veya `.dylib` (Sideload / ESign / TrollStore) dosyasını kullanabilirsiniz.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
