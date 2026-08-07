@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-latest   # macOS ortamına geri döndük
+    runs-on: macos-13   # fakeroot çökmesini önlemek için Intel tabanlı Mac kullanıyoruz
 
     steps:
       - name: Checkout Repository
