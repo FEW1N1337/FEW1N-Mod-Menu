@@ -153,6 +153,7 @@ static int  stealthTapCount = 0;          // gizli acma icin triple-tap sayaci
 static NSDate *stealthLastTap = nil;      // son tap zamani
 static bool isRoomMasterHack = false;     // odaya girince master olmaya calis
 static int  chatTemplateIdx = 0;          // hazir chat sablonu indeksi
+static void* mkStr(NSString* s);
 
 static NSTimer *spamTimer = nil;
 static NSTimer *tickTimer = nil;
